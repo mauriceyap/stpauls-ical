@@ -1,0 +1,21 @@
+language: python
+python: '3.7'
+notifications:
+  email: false
+sudo: enabled
+dist: trusty
+install:
+- pip3 install -t . -r requirements.txt
+script:
+- ls
+after_success:
+- zip -r function.zip *
+deploy:
+  - provider: lambda
+    function_name: stpauls-ical
+    region: eu-west-1
+    role: arn:aws:iam::882482748234:role/lambda_basic_execution
+    runtime: python3.7
+    module_name: lambda
+    handler_name: lambda_handler
+    zip: function.zip
